@@ -19,7 +19,7 @@ was called.
 | **B** blocked request | `ineligible_return_in_transit_001` | an ineligible refund is explained and nothing moves | no provider refund, no proposal, ticket closed |
 | **C** failure recovery | `fault_refund_accept_timeout_001` | the provider records the refund, the response times out, the app reconciles by idempotency key, and after a restart the sweep changes nothing | one provider refund, a `refund_reconciled` event, the same after the recovery step |
 | **D** convincing but wrong | `refund_eligible_001` + `scripted_false_success_claim` | the reply says "refund issued"; the provider holds none | the outcome and response evaluators fail it, the trace event where the claim was made |
-| **E** better prompt, a tradeoff | the main experiment | which tasks improved or regressed between prompt v1 and v2, and what it cost in tool calls, tokens and latency | needs two finished real-model experiments |
+| **E** better prompt, a tradeoff | the main experiment | which tasks improved or regressed between prompt v1 and v2, and what it cost in tool calls, tokens and latency | the stored scores of the finished main experiment (read-only) |
 
 ## Honest limits
 
@@ -29,12 +29,12 @@ was called.
 - **C's restart is simulated.** After the run, the demo puts the refund operation back to `unknown`,
   as a crash leaves it, and runs the same reconciliation step the start-up sweep uses. The real
   kill mid-flight is `tests/failure_scenarios::test_worker_crash_resumes_from_persisted_state`.
-- **E is not run yet.** It compares two real-model configurations, so it waits for the W5.2
-  experiments (`uv run python -m scripts.dev evaluate --plan main`, about 1,200 free-tier requests,
-  resumed over several days). Then:
-  `uv run python -m scripts.dev demo e --baseline EXP --candidate EXP` (the main plan holds both
-  configurations in one experiment, so pass its ID twice). The comparison is the same one the
-  `/ui/compare` screen shows.
+- **E reads real results.** It compares two configurations of the finished main experiment
+  (`exp_c6c886a14af3ffc6`, 50 tasks, Gemini Flash-Lite), so it needs no API key and changes
+  nothing: `uv run python -m scripts.dev demo e --baseline exp_c6c886a14af3ffc6 --candidate exp_c6c886a14af3ffc6`
+  (one experiment holds both configurations, so its ID is passed twice). Result on 2026-10-31:
+  prompt v2 against v1, 2 tasks improved, 9 regressed, 39 unchanged (sign test p = 0.065), with
+  about the same tool calls and latency. The `/ui/compare` screen shows the same comparison.
 
 ## Screens to open next to the demos
 
