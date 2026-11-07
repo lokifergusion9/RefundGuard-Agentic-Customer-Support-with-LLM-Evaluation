@@ -374,3 +374,4 @@ The suite covers the schema and its constraints, ownership and auth, eligibility
 [MIT](LICENSE). All data in this repository is synthetic.
 -----------------
 Lokesh kumar(IIT Roorkee)
+Self Project
