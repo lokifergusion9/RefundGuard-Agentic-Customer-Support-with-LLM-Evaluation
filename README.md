@@ -1,3 +1,4 @@
+
 <div align="center">
 
 # 🛟 Customer Support Resolution Agent
@@ -256,6 +257,13 @@ The evaluation screens read the `support_eval` database: point `DATABASE_URL` at
 
 </details>
 
+<details>
+<summary><b>☁️ Deploy (free: Render + Neon)</b></summary>
+
+The whole demo runs as **one process** in about 300 MB: the agent API, the three mocks (mounted under `/mock/...`) and the evaluation screens (`deploy/server.py`). Embeddings run on ONNX via fastembed, so no torch is installed. The databases are on Neon's free tier (pgvector included). Steps, secrets and limits: [`DEPLOY.md`](DEPLOY.md).
+
+</details>
+
 ## 🎬 Demos
 
 Each demo checks the **system state** (provider refunds, proposals, ticket status, evaluator verdict) and exits non-zero if a step fails. Details: [`docs/demo-scenarios.md`](docs/demo-scenarios.md).
@@ -331,6 +339,7 @@ customer-support-resolution-agent/
 │   ├── reports/            #   exported results
 │   └── web/                #   experiment, run and comparison screens
 ├── mock_services/          # payments, shipping, ticketing, with fault injection
+├── deploy/                 # one-process server and start script for Render (DEPLOY.md)
 ├── migrations/             # 19 hand-written Alembic migrations
 ├── scripts/                # dev commands, seed, demos, token minting, recovery
 ├── tests/                  # unit, integration, failure scenarios, evals
@@ -347,7 +356,7 @@ customer-support-resolution-agent/
 | Orchestration | LangGraph with a PostgreSQL checkpointer (`interrupt()` / `Command(resume=…)`) |
 | API and screens | FastAPI, Pydantic v2, Jinja2 with light JavaScript |
 | Data | PostgreSQL 17, pgvector, SQLAlchemy 2, Alembic |
-| Models | Gemini via `google-genai` (Flash-Lite and Flash, free tier); local `all-MiniLM-L6-v2` embeddings |
+| Models | Gemini via `google-genai` (Flash-Lite and Flash, free tier); local `all-MiniLM-L6-v2` embeddings (ONNX via fastembed) |
 | Infrastructure | Docker Compose, GitHub Actions CI (ruff + the full suite on a pgvector service) |
 
 ## 🧪 Testing

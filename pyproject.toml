@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.20.1",
     "fastapi>=0.162.0",
+    "fastembed>=0.7",
     "google-genai>=1.40",
     "httpx>=0.28.1",
     "jinja2>=3.1.6",
@@ -17,7 +18,6 @@ dependencies = [
     "pydantic-settings>=2.16.1",
     "pyjwt>=2.15.1",
     "pyyaml>=6.0.3",
-    "sentence-transformers>=5.1",
     "sqlalchemy>=2.1.6",
     "uvicorn[standard]>=0.54.0",
 ]
@@ -28,7 +28,7 @@ testpaths = ["tests"]
 # Slow or paid tests are opt-in: `uv run pytest -m embedding_model` or `-m llm`.
 addopts = "-m 'not embedding_model and not llm'"
 markers = [
-    "embedding_model: loads the real sentence-transformers model (downloads ~90 MB once)",
+    "embedding_model: loads the real all-MiniLM-L6-v2 model via fastembed (downloads ~90 MB once)",
     "llm: calls the real Gemini API (needs LLM_API_KEY, uses free-tier quota)",
 ]
 
