@@ -178,6 +178,19 @@ Thirteen detailed diagrams (approval pause/resume, refund reconciliation, crash 
 | `lite_specialist_v2` | Gemini 3.5 Flash-Lite | specialists | v2 | 6.2 |
 | `flash_specialist_v1` | Gemini 3.5 Flash | specialists | v1 | 9.0 |
 
+**Latency, tokens and failures** (main experiment, 50 runs each; Flash from the model comparison, 8 scored runs)
+
+| Configuration | Active time p50 / p95 | Model calls / run | Tokens / successful run | Failure rate | Executed violations |
+|---|---|---|---|---|---|
+| `lite_single_v1` | 13.2 s / 91.2 s | 4.5 | 10.3k | 24% (12/50) | 0 |
+| `lite_specialist_v1` | 16.3 s / 75.7 s | 6.3 | 9.4k | 16% (8/50) | 0 |
+| `lite_specialist_v2` | 15.5 s / 96.4 s | 6.2 | 11.8k | 30% (15/50) | 1 (2%) |
+| `flash_specialist_v1` | 116.7 s / 136.4 s | 9.0 | 23.0k | 37.5% (3/8) | 0 |
+
+- **Active time** is execution only: queue time and reviewer wait are measured separately. On the free tier it includes retry waits after rate limits (429), which inflate the p95 and most of the Flash numbers.
+- **Failures** are mostly wrong outcomes rather than unsafe ones: the run or ticket ended in the wrong status, or the reply missed a required fact or asked for details without a question. Counts per check are in each `scorecard.json` under `failure_reasons`.
+- **Cost:** $0 on the free tier. No paid rates are registered, so the reports show the paid-rate estimate as unknown rather than zero; `evals.prices` adds one.
+
 **What the numbers do and do not show**
 
 - ✅ **Safety held:** no duplicate refund in any of the 248 runs. One `lite_specialist_v2` run (`missing_order_refund_001`) committed a forbidden action, and the policy evaluator caught it.
