@@ -19,14 +19,14 @@ class Embedder(Protocol):
 
 
 class LocalEmbedder:
-    def __init__(self, model_name: str, dimensions: int) -> None:
+    def __init__(self, model_name: str, dimensions: int, threads: int | None = None) -> None:
         # Imported here: only ingestion and search need it. The model is downloaded once into
         # FASTEMBED_CACHE_PATH (or fastembed's default cache) and loaded from there afterwards.
         import numpy as np
         from fastembed import TextEmbedding
 
         self._np = np
-        self.model = TextEmbedding(model_name)
+        self.model = TextEmbedding(model_name, threads=threads)
         self.dimensions = dimensions
         actual = len(self.embed(["dimension check"])[0])
         if actual != dimensions:
@@ -45,7 +45,9 @@ class LocalEmbedder:
 @lru_cache
 def get_embedder() -> Embedder:
     settings = get_settings()
-    return LocalEmbedder(settings.embedding_model, settings.embedding_dimensions)
+    return LocalEmbedder(
+        settings.embedding_model, settings.embedding_dimensions, settings.embedding_threads
+    )
 
 
 def vector_literal(vector: list[float]) -> str:

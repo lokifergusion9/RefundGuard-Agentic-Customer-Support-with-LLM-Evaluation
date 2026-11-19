@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     # policy_chunks.embedding vector(384) column.
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dimensions: int = 384
+    # ONNX Runtime threads for the embedder; unset uses every core. Set 1 on small shared CPUs.
+    embedding_threads: int | None = None
 
     # One store, one currency (Q6); amounts are in minor units (paise).
     store_currency: str = "INR"

@@ -8,6 +8,7 @@ ENV UV_LINK_MODE=copy \
     PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     FASTEMBED_CACHE_PATH=/app/.cache/fastembed \
+    EMBEDDING_THREADS=1 \
     RUN_EXECUTION=inline
 
 # Dependencies first, so code changes do not reinstall them.

@@ -13,8 +13,7 @@ python -m alembic upgrade head
 if [ -n "${EVAL_DATABASE_URL:-}" ]; then
     DATABASE_URL="$EVAL_DATABASE_URL" python -m alembic upgrade head
 fi
-python -m scripts.ingest_policies
-
+# Policies are ingested by the server's warm-up (deploy/server.py): the model loads once.
 uvicorn deploy.server:app --host 0.0.0.0 --port "$PORT" \
     --proxy-headers --forwarded-allow-ips '*' &
 server=$!
@@ -23,7 +22,8 @@ trap 'kill -TERM "$server" 2>/dev/null' TERM INT
 tries=0
 until python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:$PORT/health', timeout=2)" 2>/dev/null; do
     tries=$((tries + 1))
-    if [ "$tries" -gt 90 ]; then
+    # The warm-up loads the model before the port opens: minutes on a small shared CPU.
+    if [ "$tries" -gt 600 ]; then
         echo "server did not become healthy" >&2
         kill -TERM "$server" 2>/dev/null
         exit 1
