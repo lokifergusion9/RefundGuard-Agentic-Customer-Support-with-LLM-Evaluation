@@ -6,7 +6,7 @@
 **An AI agent that takes a complaint from *"where is my refund?"* to a *verified* outcome,<br>
 plus an evaluation platform that measures whether it can be trusted with money.**
 
-[![CI](https://github.com/lokifergusion9/Agentic-AI-Customer-Support-System/actions/workflows/ci.yml/badge.svg)](https://github.com/lokifergusion9/Agentic-AI-Customer-Support-System/actions/workflows/ci.yml)
+[![CI](https://github.com/lokifergusion9/RefundGuard-Agentic-Customer-Support-with-LLM-Evaluation/actions/workflows/ci.yml/badge.svg)](https://github.com/lokifergusion9/RefundGuard-Agentic-Customer-Support-with-LLM-Evaluation/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-workflow-1C3C3C)
 ![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)
@@ -14,8 +14,11 @@ plus an evaluation platform that measures whether it can be trusted with money.*
 ![Gemini](https://img.shields.io/badge/Gemini-free%20tier-8E75B2?logo=googlegemini&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-911%20passing-2ea44f)
 ![License](https://img.shields.io/badge/license-MIT-blue)
+[![Live demo](https://img.shields.io/badge/live%20demo-Render-46E3B7?logo=render&logoColor=white)](https://refundguard-z5ni.onrender.com)
 
-[How it works](#-how-it-works) · [Safety](#-safety-by-design) · [Evaluation](#-the-evaluation-platform) · [Results](#-results) · [Quickstart](#-quickstart) · [Demos](#-demos) · [API](#-api) · [Project layout](#-project-layout)
+**🌐 Live: [refundguard-z5ni.onrender.com](https://refundguard-z5ni.onrender.com)**
+
+[Live demo](#-live-demo) · [How it works](#-how-it-works) · [Safety](#-safety-by-design) · [Evaluation](#-the-evaluation-platform) · [Results](#-results) · [Quickstart](#-quickstart) · [Demos](#-demos) · [API](#-api) · [Project layout](#-project-layout)
 
 </div>
 
@@ -33,6 +36,23 @@ plus an evaluation platform that measures whether it can be trusted with money.*
 <td align="center"><b>911</b><br><sub>deterministic tests</sub></td>
 </tr>
 </table>
+
+## 🌐 Live demo
+
+Deployed on **Render** (free, Singapore) with **Neon** Postgres + pgvector (free, Singapore). Details: [`DEPLOY.md`](DEPLOY.md).
+
+| Screen | Link | What it shows |
+|---|---|---|
+| 🧑 Customer demo | [`/demo`](https://refundguard-z5ni.onrender.com/demo) | complaint → workflow timeline → evidence and policy → approval → outcome |
+| 🧑‍⚖️ Reviewer queue | [`/review`](https://refundguard-z5ni.onrender.com/review) | pending refunds with evidence, cited policy and expiry; approve or reject |
+| 📊 Experiments | [`/ui/experiments`](https://refundguard-z5ni.onrender.com/ui/experiments) | every experiment behind the results below (11 experiments, 300 runs incl. pilot and smoke) |
+| 📘 API | [`/docs`](https://refundguard-z5ni.onrender.com/docs) | OpenAPI reference for every endpoint |
+
+> [!NOTE]
+> - **First visit can take about a minute:** the free instance sleeps after 15 minutes idle.
+> - **The screens need a demo token.** Pages carry no data and call the API with a bearer token. Tokens are handed out on request, because every agent run spends the free Gemini quota.
+> - **The demo data resets** on every restart (business tables and mocks). Experiment results are kept.
+> - Measured on the live instance: a refund run (classify, look up order, return and policy, propose) reaches *waiting for approval* in **~39 s**, and the approved refund executes in **~1.3 s**.
 
 ## 🎯 The problem
 
@@ -207,8 +227,8 @@ Reports (manifest, scorecard, one row per run, as JSON and CSV) are in [`evals/r
 **Requirements:** Python 3.13, [uv](https://docs.astral.sh/uv/), Docker. **No API key** is needed for the scripted path below.
 
 ```bash
-git clone https://github.com/lokifergusion9/Agentic-AI-Customer-Support-System.git
-cd Agentic-AI-Customer-Support-System
+git clone https://github.com/lokifergusion9/RefundGuard-Agentic-Customer-Support-with-LLM-Evaluation.git
+cd RefundGuard-Agentic-Customer-Support-with-LLM-Evaluation
 
 docker compose up -d postgres                  # PostgreSQL 17 + pgvector on :5432
 docker compose --profile mocks up -d           # mock payments :8001, shipping :8002, ticketing :8003
@@ -260,7 +280,7 @@ The evaluation screens read the `support_eval` database: point `DATABASE_URL` at
 <details>
 <summary><b>☁️ Deploy (free: Render + Neon)</b></summary>
 
-The whole demo runs as **one process** in about 300 MB: the agent API, the three mocks (mounted under `/mock/...`) and the evaluation screens (`deploy/server.py`). Embeddings run on ONNX via fastembed, so no torch is installed. The databases are on Neon's free tier (pgvector included). Steps, secrets and limits: [`DEPLOY.md`](DEPLOY.md).
+Live at **[refundguard-z5ni.onrender.com](https://refundguard-z5ni.onrender.com)**. The whole demo runs as **one process** in about 300 MB: the agent API, the three mocks (mounted under `/mock/...`) and the evaluation screens (`deploy/server.py`). Embeddings run on ONNX via fastembed, so no torch is installed, and the model is loaded before the port opens (about 7 s on the free instance). The databases are on Neon's free tier (pgvector included). Steps, secrets and limits: [`DEPLOY.md`](DEPLOY.md).
 
 </details>
 
