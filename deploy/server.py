@@ -17,6 +17,7 @@ import os
 import time
 from collections.abc import Iterator
 
+from fastapi.responses import RedirectResponse
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
@@ -49,6 +50,14 @@ def warm_up() -> None:
 warm_up()
 
 app = create_app()
+
+
+@app.get("/", include_in_schema=False)
+def home() -> RedirectResponse:
+    """The bare URL is what people open first: send them to the demo screen."""
+    return RedirectResponse("/demo")
+
+
 app.mount("/mock/payments", payments)
 app.mount("/mock/shipping", shipping)
 app.mount("/mock/ticketing", ticketing)
