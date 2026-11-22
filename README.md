@@ -16,7 +16,7 @@ plus an evaluation platform that measures whether it can be trusted with money.*
 ![License](https://img.shields.io/badge/license-MIT-blue)
 [![Live demo](https://img.shields.io/badge/live%20demo-Render-46E3B7?logo=render&logoColor=white)](https://refundguard-z5ni.onrender.com)
 
-**🌐 Live: [refundguard-z5ni.onrender.com](https://refundguard-z5ni.onrender.com)**
+**🌐 Live: [refundguard-z5ni.onrender.com](https://refundguard-z5ni.onrender.com)** · **🎬 [Demo video](docs/RefundGuard-demo.mp4)** (3:11)
 
 [Live demo](#-live-demo) · [How it works](#-how-it-works) · [Safety](#-safety-by-design) · [Evaluation](#-the-evaluation-platform) · [Results](#-results) · [Quickstart](#-quickstart) · [Demos](#-demos) · [API](#-api) · [Project layout](#-project-layout)
 
@@ -40,6 +40,8 @@ plus an evaluation platform that measures whether it can be trusted with money.*
 ## 🌐 Live demo
 
 Deployed on **Render** (free, Singapore) with **Neon** Postgres + pgvector (free, Singapore). Details: [`DEPLOY.md`](DEPLOY.md).
+
+🎬 **Demo video:** [▶ Watch the demo](docs/RefundGuard-demo.mp4) (3:11, no voice-over, captions on screen). A real complaint on the live site, from investigation to reviewer approval to one verified refund, then demos B, C and D and the evaluation screens. Built from screenshots of the live site and the demos' real terminal output, not a screen recording. Demo D's agent is a deliberate scripted fake, and demo C's restart is simulated; both are labelled in the video.
 
 | Screen | Link | What it shows |
 |---|---|---|
@@ -409,7 +411,7 @@ The suite covers the schema and its constraints, ownership and auth, eligibility
 - Demo C simulates the restart; the real mid-flight kill is covered by a failure-scenario test.
 - Out of scope: chargebacks, fraud decisions, complex partial returns, messaging channels beyond the demo screens.
 
-**Possible next steps:** public agent benchmarks (BFCL, τ²-bench), an LLM judge for response quality only, concurrent attempts per environment, and a recorded walkthrough of demos A to E.
+**Possible next steps:** public agent benchmarks (BFCL, τ²-bench), an LLM judge for response quality only, and concurrent attempts per environment.
 
 ## 📄 License
 
